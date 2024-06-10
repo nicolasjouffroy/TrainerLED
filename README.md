@@ -29,7 +29,7 @@ pip install bleak openrgb-python
 ```
 ### 3. Configuration de OpenRGB
 
-Téléchargez et installez OpenRGB. Assurez-vous que OpenRGB soit fonctionne dans un premier temps.
+Téléchargez et installez [OpenRGB](https://openrgb.org/). Assurez-vous que OpenRGB soit fonctionne dans un premier temps.
 Ensuite il faut que le serveur OpenRGB soit activé. Pour l'activer il faut aller dans les paramètres de OpenRGB et activer l'option "Enable SDK Server".
 
 ## 🔍 Trouver l'UUID et l'adresse MAC du Home Trainer
