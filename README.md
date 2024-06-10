@@ -6,7 +6,8 @@
 
 ## 🚧 En cours de développement 🚧
 
-Ce projet est actuellement en cours de développement. Les contributions et suggestions sont les bienvenues !
+En cours de développement. Les contributions et suggestions sont les bienvenues !
+
 
 Ce projet permet de synchroniser la puissance de pédalage d'un home trainer avec des LED RGB en utilisant `OpenRGB` pour le contrôle des LED et `Bleak` pour la communication Bluetooth avec le home trainer.
 L'idée est de visualiser les 7 zones de couleurs pour représenter les différentes plages de puissance.
