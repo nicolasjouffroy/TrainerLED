@@ -5,6 +5,7 @@
 [![OpenRGB](https://img.shields.io/badge/OpenRGB-Compatible-green)](https://openrgb.org/)
 
 Ce projet permet de synchroniser la puissance de pédalage d'un home trainer avec des LED RGB en utilisant `OpenRGB` pour le contrôle des LED et `Bleak` pour la communication Bluetooth avec le home trainer.
+L'idée est de visualiser les 7 zones de couleurs pour représenter les différentes plages de puissance.
 
 ## 🌟 Prérequis
 
@@ -47,10 +48,14 @@ Notez l'adresse MAC qui sera dans un format comme XX:XX:XX:XX:XX:XX.
 
 ### Trouver l'UUID
 
-Utiliser un scanner Bluetooth :
+Utiliser un scanner Bluetooth (l'application par exemple):
 Une fois votre appareil trouvé dans l'application scanner, vous pouvez afficher les services et caractéristiques disponibles.
-Recherchez les services qui se rapportent à la puissance de cyclisme. Les UUIDs typiques sont :
+Recherchez les services qui se rapportent à la puissance de cyclisme. 
+
+Les UUIDs typiques sont :
+
 Service de puissance de cyclisme : 00001818-0000-1000-8000-00805f9b34fb
+
 Caractéristique de mesure de puissance : 00002a63-0000-1000-8000-00805f9b34fb
 
 ## 📝 Configuration du Script
@@ -195,5 +200,15 @@ Ouvrez un terminal et exécutez le script :
 ```
 python TrainerLED.py
 ```
+## Observer les résultats :
 
+Les LED devraient maintenant changer de couleur en fonction de la puissance moyenne sur 1 seconde mesurée par le home trainer.
+
+## 📌 Contribution
+
+Les contributions sont les bienvenues ! Si vous avez des idées d'améliorations ou si vous rencontrez des problèmes, n'hésitez pas à ouvrir une issue ou à soumettre une pull request.
+
+## 📝 Licence
+
+Ce projet est sous licence MIT. Voir le fichier LICENSE pour plus d'informations.
 
