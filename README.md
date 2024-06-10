@@ -31,11 +31,32 @@ pip install bleak openrgb-python
 
 Téléchargez et installez OpenRGB. Assurez-vous que le serveur OpenRGB est activé. Vous pouvez activer le serveur en allant dans les paramètres de OpenRGB et en activant l'option "Enable SDK Server".
 
-## 📝 Configuration
+## 🔍 Trouver l'UUID et l'adresse MAC du Home Trainer
+
+Pour que le script fonctionne, vous devez connaître l'UUID du service et de la caractéristique de puissance, ainsi que l'adresse MAC de votre home trainer. 
+
+Voici comment les trouver :
+
+### Trouver l'adresse MAC
+
+Scanner avec un outil Bluetooth :
+Utilisez un outil comme Bluetooth LE Scanner sur Android ou LightBlue sur iOS.
+Recherchez votre home trainer dans la liste des appareils disponibles.
+Notez l'adresse MAC qui sera dans un format comme XX:XX:XX:XX:XX:XX.
+
+### Trouver l'UUID
+
+Utiliser un scanner Bluetooth :
+Une fois votre appareil trouvé dans l'application scanner, vous pouvez afficher les services et caractéristiques disponibles.
+Recherchez les services qui se rapportent à la puissance de cyclisme. Les UUIDs typiques sont :
+Service de puissance de cyclisme : 00001818-0000-1000-8000-00805f9b34fb
+Caractéristique de mesure de puissance : 00002a63-0000-1000-8000-00805f9b34fb
+
+## 📝 Configuration du Script
 
 ### 1. Créer et copier le script
 
-Créez un fichier trainled.py et copiez le code suivant :
+Créez un fichier TrainerLED.py et copiez le code suivant :
 
 ```
 import asyncio
@@ -162,3 +183,16 @@ try:
 except KeyboardInterrupt:
     print("Script arrêté par l'utilisateur.")
 ```
+
+## 🚀 Utilisation
+
+### 1. Configurer le script :
+Pensez à éditer le script TrainerLED.py et remplacez les valeurs des variables HOME_TRAINER_MAC, SERVICE_UUID, et CHARACTERISTIC_UUID par celles de votre home trainer.
+
+### 2. Exécuter le script :
+Ouvrez un terminal et exécutez le script :
+```
+python TrainerLED.py
+```
+
+
