@@ -10,7 +10,7 @@ Ce projet permet de synchroniser la puissance de pédalage d'un home trainer ave
 
 Avant de commencer, assurez-vous d'avoir les éléments suivants :
 
-- **Home Trainer Bluetooth** : Compatible avec les services de puissance de cyclisme.
+- **Home Trainer Bluetooth** : Home Trainer avec capteur de puissance de cyclisme.
 - **PC avec Bluetooth et Windows** : Le script est configuré pour Windows.
 - **Contrôleur de LED RGB** : Compatible avec OpenRGB.
 
@@ -29,11 +29,12 @@ pip install bleak openrgb-python
 ```
 ### 3. Configuration de OpenRGB
 
-Téléchargez et installez OpenRGB. Assurez-vous que le serveur OpenRGB est activé. Vous pouvez activer le serveur en allant dans les paramètres de OpenRGB et en activant l'option "Enable SDK Server".
+Téléchargez et installez OpenRGB. Assurez-vous que OpenRGB soit fonctionne dans un premier temps.
+Ensuite il faut que le serveur OpenRGB soit activé. Pour l'activer il faut aller dans les paramètres de OpenRGB et activer l'option "Enable SDK Server".
 
 ## 🔍 Trouver l'UUID et l'adresse MAC du Home Trainer
 
-Pour que le script fonctionne, vous devez connaître l'UUID du service et de la caractéristique de puissance, ainsi que l'adresse MAC de votre home trainer. 
+C'est la partie la plus difficile. Pour que le script fonctionne, vous devez connaître l'UUID du service et de la caractéristique de puissance, ainsi que l'adresse MAC de votre home trainer. 
 
 Voici comment les trouver :
 
