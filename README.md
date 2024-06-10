@@ -4,6 +4,10 @@
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![OpenRGB](https://img.shields.io/badge/OpenRGB-Compatible-green)](https://openrgb.org/)
 
+## 🚧 En cours de développement 🚧
+
+Ce projet est actuellement en cours de développement. Les contributions et suggestions sont les bienvenues !
+
 Ce projet permet de synchroniser la puissance de pédalage d'un home trainer avec des LED RGB en utilisant `OpenRGB` pour le contrôle des LED et `Bleak` pour la communication Bluetooth avec le home trainer.
 L'idée est de visualiser les 7 zones de couleurs pour représenter les différentes plages de puissance.
 
