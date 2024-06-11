@@ -15,7 +15,7 @@ L'idée est de visualiser les 7 zones de couleurs pour représenter les différe
 
 ![Description de l'image](TrainerLED.png)  
 
-Voici une vidéo de démonstration  :
+Voici une vidéo de démonstration (cliquez sur la vignette) :
 
 [![Demo vidéo](https://img.youtube.com/vi/Lh4l7ruDxWw/0.jpg)](https://www.youtube.com/watch?v=Lh4l7ruDxWw)
 
