@@ -12,6 +12,9 @@ En cours de développement. Les contributions et suggestions sont les bienvenues
 Ce projet permet de synchroniser la puissance de pédalage d'un home trainer avec des LED RGB en utilisant `OpenRGB` pour le contrôle des LED et `Bleak` pour la communication Bluetooth avec le home trainer.
 L'idée est de visualiser les 7 zones de couleurs pour représenter les différentes plages de puissance.
 
+![Description de l'image](TrainerLED.png)
+
+
 ## 🌟 Prérequis
 
 Avant de commencer, assurez-vous d'avoir les éléments suivants :
@@ -70,26 +73,131 @@ Caractéristique de mesure de puissance : 00002a63-0000-1000-8000-00805f9b34fb
 Créez un fichier TrainerLED.py et copiez le code suivant :
 
 ```
+import sys
 import asyncio
+import threading
+import time
+import json
+from collections import deque
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSlider, QFrame, QColorDialog, QGridLayout, QLineEdit
+from PyQt5.QtGui import QIntValidator
+from PyQt5.QtCore import QThread, pyqtSignal, QObject, Qt
 from bleak import BleakClient
 from openrgb import OpenRGBClient
 from openrgb.utils import RGBColor
-import threading
-import time
-from collections import deque
 
-power_values = deque(maxlen=10)  # Liste pour stocker les valeurs de puissance sur 1 seconde (10 lectures à 10 Hz)
-last_update_time = time.time()  # Temps du dernier update de la puissance
-running = True  # Variable de contrôle pour arrêter le script
+# Chemin du fichier de configuration
+CONFIG_FILE = 'config.json'
 
+# Variable globale pour arrêter le script
+running = True
+
+# Déclaration des variables pour la puissance et la couleur
+power_values = deque(maxlen=10)
+last_update_time = time.time()
 current_color = RGBColor(0, 0, 0)
 color_lock = threading.Lock()
 
+# UUID et adresse MAC du home trainer
+SERVICE_UUID = '00001818-0000-1000-8000-00805f9b34fb'
+CHARACTERISTIC_UUID = '00002a63-0000-1000-8000-00805f9b34fb'
+HOME_TRAINER_MAC = 'A1:B2:C3:D4:E5:F6'
+
+# Classe pour gérer les notifications de puissance dans un thread séparé
+class PowerNotificationHandler(QObject):
+    power_updated = pyqtSignal(int)
+    color_updated = pyqtSignal(tuple)
+
+    def __init__(self):
+        super().__init__()
+        self.zone_thresholds, self.zone_colors = self.load_config()
+
+    def load_config(self):
+        try:
+            with open(CONFIG_FILE, 'r') as f:
+                config = json.load(f)
+                zone_thresholds = config['thresholds']
+                zone_colors = [tuple(color) for color in config['colors']]
+                return zone_thresholds, zone_colors
+        except (FileNotFoundError, KeyError, ValueError):
+            return [106, 146, 175, 205, 234, 293], [
+                (255, 255, 255),  # Default color for zone 1
+                (0, 0, 255),      # Default color for zone 2
+                (0, 255, 0),      # Default color for zone 3
+                (255, 255, 0),    # Default color for zone 4
+                (255, 165, 0),    # Default color for zone 5
+                (255, 0, 0),      # Default color for zone 6
+                (128, 0, 128)     # Default color for zone 7
+            ]
+
+    def save_config(self):
+        config = {
+            'thresholds': self.zone_thresholds,
+            'colors': [list(color) for color in self.zone_colors]
+        }
+        with open(CONFIG_FILE, 'w') as f:
+            json.dump(config, f)
+
+    def restore_default_config(self):
+        self.zone_thresholds = [106, 146, 175, 205, 234, 293]
+        self.zone_colors = [
+            (255, 255, 255),  # Default color for zone 1
+            (0, 0, 255),      # Default color for zone 2
+            (0, 255, 0),      # Default color for zone 3
+            (255, 255, 0),    # Default color for zone 4
+            (255, 165, 0),    # Default color for zone 5
+            (255, 0, 0),      # Default color for zone 6
+            (128, 0, 128)     # Default color for zone 7
+        ]
+        self.save_config()
+
+    def get_zone_ranges(self):
+        ranges = []
+        lower_bound = 0
+        for threshold in self.zone_thresholds:
+            ranges.append((lower_bound, threshold))
+            lower_bound = threshold + 1
+        ranges.append((lower_bound, float('inf')))  # Last range is open-ended
+        return ranges
+
+    def set_zone_threshold(self, index, value):
+        self.zone_thresholds[index] = value
+        self.save_config()
+
+    def set_zone_color(self, index, color):
+        self.zone_colors[index] = color
+        self.save_config()
+
+    def handle_notification(self, sender, data):
+        global last_update_time
+        try:
+            puissance = int.from_bytes(data[2:4], byteorder='little')
+            last_update_time = time.time()
+            power_values.append(puissance)
+
+            if len(power_values) == power_values.maxlen:
+                avg_puissance = sum(power_values) / len(power_values)
+                self.power_updated.emit(int(avg_puissance))
+
+                for i, threshold in enumerate(self.zone_thresholds):
+                    if avg_puissance <= threshold:
+                        new_color = self.zone_colors[i]
+                        zone = i + 1
+                        break
+                else:
+                    new_color = self.zone_colors[-1]
+                    zone = len(self.zone_colors)
+
+                self.color_updated.emit((new_color, zone))
+                threading.Thread(target=set_led_color_with_transition, args=new_color).start()
+        except Exception as e:
+            print(f"Erreur lors de la gestion des données de puissance: {e}")
+
 # Fonction pour définir la couleur des LED avec transition
-def set_led_color_with_transition(r, g, b, steps=10, delay=0.01):  # Transition plus courte
+def set_led_color_with_transition(r, g, b, steps=10, delay=0.01):
     global current_color
     try:
-        client = OpenRGBClient('localhost', 6742)  # Adresse et port du serveur OpenRGB
+        client = OpenRGBClient('localhost', 6742)
         devices = client.devices
 
         with color_lock:
@@ -121,64 +229,16 @@ def set_led_color_with_transition(r, g, b, steps=10, delay=0.01):  # Transition 
     except Exception as e:
         print(f"Erreur de connexion à OpenRGB: {e}")
 
-SERVICE_UUID = '00001818-0000-1000-8000-00805f9b34fb'  # UUID pour le service de puissance de cyclisme
-CHARACTERISTIC_UUID = '00002a63-0000-1000-8000-00805f9b34fb'  # UUID pour la caractéristique de mesure de puissance
-HOME_TRAINER_MAC = 'AB:CD:EF:GH:IJ:KL'
-
-# Fonction pour gérer les notifications de données de puissance
-def notification_handler(sender, data):
-    global last_update_time
-    print(f"Data brute : {data}")
-    try:
-        # Extraction de la puissance à partir du troisième et quatrième octet
-        puissance = int.from_bytes(data[2:4], byteorder='little')
-        print("Puissance :", puissance)
-        
-        # Mettre à jour le temps de la dernière lecture
-        last_update_time = time.time()
-
-        # Ajouter la puissance actuelle à la liste des valeurs
-        power_values.append(puissance)
-
-        # Calculer la moyenne des puissances sur les 1 dernières secondes
-        if len(power_values) == power_values.maxlen:
-            avg_puissance = sum(power_values) / len(power_values)
-            print("Puissance moyenne (1s) :", avg_puissance)
-
-            # Déterminer la couleur en fonction de la zone de puissance
-            if avg_puissance <= 106:
-                new_color = (255, 255, 255)  # Blanc
-            elif avg_puissance <= 146:
-                new_color = (0, 0, 255)  # Bleu
-            elif avg_puissance <= 175:
-                new_color = (0, 255, 0)  # Vert
-            elif avg_puissance <= 205:
-                new_color = (255, 255, 0)  # Jaune
-            elif avg_puissance <= 234:
-                new_color = (255, 165, 0)  # Orange
-            elif avg_puissance <= 293:
-                new_color = (255, 0, 0)  # Rouge
-            else:
-                new_color = (128, 0, 128)  # Violet
-
-            # Appliquer la nouvelle couleur avec transition
-            threading.Thread(target=set_led_color_with_transition, args=(new_color,)).start()
-        
-    except Exception as e:
-        print(f"Erreur lors de la gestion des données de puissance: {e}")
-
 # Fonction principale pour se connecter et lire les données de puissance
-async def main():
+async def main(notification_handler):
     global last_update_time, running
     async with BleakClient(HOME_TRAINER_MAC) as client:
-        await client.start_notify(CHARACTERISTIC_UUID, notification_handler)
-        print("Connecté au home trainer. Lecture des données...")
+        await client.start_notify(CHARACTERISTIC_UUID, notification_handler.handle_notification)
         try:
             while running:
-                # Vérifier le temps écoulé depuis la dernière lecture de puissance
                 if time.time() - last_update_time > 10:
                     print("Aucune donnée reçue depuis 10 secondes, attente de nouvelles données...")
-                await asyncio.sleep(1)  # Garde la connexion active avec un délai
+                await asyncio.sleep(1)
         except asyncio.CancelledError:
             print("Tâche annulée.")
         except KeyboardInterrupt:
@@ -186,13 +246,216 @@ async def main():
             print("Interruption reçue, arrêt du script...")
         finally:
             await client.stop_notify(CHARACTERISTIC_UUID)
-            print("Notification stoppée, déconnexion.")
 
-# Exécution du script
-try:
-    asyncio.run(main())
-except KeyboardInterrupt:
-    print("Script arrêté par l'utilisateur.")
+# Thread pour exécuter la boucle asyncio
+class AsyncThread(QThread):
+    def __init__(self, notification_handler):
+        super().__init__()
+        self.notification_handler = notification_handler
+
+    def run(self):
+        loop = asyncio.new_event_loop()
+        asyncio.set_event_loop(loop)
+        loop.run_until_complete(main(self.notification_handler))
+
+# Interface graphique
+class MainWindow(QWidget):
+    def __init__(self):
+        super().__init__()
+
+        self.notification_handler = PowerNotificationHandler()
+        self.notification_handler.power_updated.connect(self.update_power)
+        self.notification_handler.color_updated.connect(self.update_color)
+
+        self.init_ui()
+        self.async_thread = AsyncThread(self.notification_handler)
+
+    def init_ui(self):
+        self.setWindowTitle('TrainerLED')
+        self.layout = QVBoxLayout()
+
+        self.start_button = QPushButton('Démarrer')
+        self.stop_button = QPushButton('Arrêter')
+        self.save_default_button = QPushButton('Sauvegarder ce paramètre par défaut')
+        self.restore_default_button = QPushButton('Restaurer les paramètres par défaut')
+        self.power_label = QLabel('Puissance: N/A')
+        self.zone_label = QLabel('Zone de puissance: N/A')
+        self.color_frame = QFrame()
+        self.color_frame.setFixedSize(20, 20)  # Taille des autres cases de couleur
+        self.color_frame.setStyleSheet("background-color: rgb(0, 0, 0);")
+
+        self.start_button.clicked.connect(self.start_thread)
+        self.stop_button.clicked.connect(self.stop_thread)
+        self.save_default_button.clicked.connect(self.save_defaults)
+        self.restore_default_button.clicked.connect(self.restore_defaults)
+
+        power_zone_layout = QHBoxLayout()
+        power_zone_layout.addWidget(self.zone_label)
+        power_zone_layout.addWidget(self.color_frame)
+
+        self.layout.addWidget(self.start_button)
+        self.layout.addWidget(self.stop_button)
+        self.layout.addWidget(self.save_default_button)
+        self.layout.addWidget(self.restore_default_button)
+        self.layout.addWidget(self.power_label)
+        self.layout.addLayout(power_zone_layout)
+
+        grid_layout = QGridLayout()
+
+        self.sliders = []
+        self.color_buttons = []
+        self.color_frames = []
+        self.threshold_edits = []
+        self.range_labels = []
+
+        zone_names = [
+            "Récupération active", "Endurance", "Tempo", "Seuil", 
+            "VO2 max", "Anaérobique", "Neuromusculaire"
+        ]
+
+        for i in range(6):
+            range_label = QLabel()
+            threshold_edit = QLineEdit(str(self.notification_handler.zone_thresholds[i]))
+            threshold_edit.setFixedWidth(50)
+            threshold_edit.setValidator(QIntValidator(0, 500))
+            threshold_edit.editingFinished.connect(self.create_threshold_edit_handler(i, threshold_edit, range_label))
+
+            slider = QSlider(Qt.Horizontal)
+            slider.setMinimum(0)
+            slider.setMaximum(500)
+            slider.setValue(self.notification_handler.zone_thresholds[i])
+            slider.valueChanged.connect(self.create_slider_change_handler(i, threshold_edit, range_label))
+
+            color_button = QPushButton(f'Sélectionner Couleur Zone {i + 1}')
+            color_button.clicked.connect(self.create_color_change_handler(i))
+
+            color_frame = QFrame()
+            color_frame.setFixedSize(20, 20)
+            color_frame.setStyleSheet(f"background-color: rgb({self.notification_handler.zone_colors[i][0]}, {self.notification_handler.zone_colors[i][1]}, {self.notification_handler.zone_colors[i][2]});")
+
+            self.sliders.append(slider)
+            self.color_buttons.append(color_button)
+            self.color_frames.append(color_frame)
+            self.threshold_edits.append(threshold_edit)
+            self.range_labels.append(range_label)
+
+            grid_layout.addWidget(range_label, i, 0, 1, 2)
+            grid_layout.addWidget(threshold_edit, i, 2)
+            grid_layout.addWidget(slider, i, 3)
+            grid_layout.addWidget(color_button, i, 4)
+            grid_layout.addWidget(color_frame, i, 5)
+
+        # Ajout de la sélection de couleur pour la zone 7
+        range_label_7 = QLabel()
+        threshold_edit_7 = QLineEdit('N/A')
+        threshold_edit_7.setFixedWidth(50)
+        threshold_edit_7.setEnabled(False)
+
+        color_button_7 = QPushButton(f'Sélectionner Couleur Zone 7')
+        color_button_7.clicked.connect(self.create_color_change_handler(6))
+
+        color_frame_7 = QFrame()
+        color_frame_7.setFixedSize(20, 20)
+        color_frame_7.setStyleSheet(f"background-color: rgb({self.notification_handler.zone_colors[6][0]}, {self.notification_handler.zone_colors[6][1]}, {self.notification_handler.zone_colors[6][2]});")
+
+        slider_7 = QSlider(Qt.Horizontal)
+        slider_7.setMinimum(0)
+        slider_7.setMaximum(500)
+        slider_7.setValue(0)
+        slider_7.setEnabled(False)  # Désactiver le curseur pour la zone 7
+
+        grid_layout.addWidget(range_label_7, 6, 0, 1, 2)
+        grid_layout.addWidget(threshold_edit_7, 6, 2)
+        grid_layout.addWidget(slider_7, 6, 3)
+        grid_layout.addWidget(color_button_7, 6, 4)
+        grid_layout.addWidget(color_frame_7, 6, 5)
+
+        self.color_frames.append(color_frame_7)
+        self.range_labels.append(range_label_7)
+        self.layout.addLayout(grid_layout)
+
+        self.update_ranges()
+
+        self.setLayout(self.layout)
+
+    def create_slider_change_handler(self, index, threshold_edit, range_label):
+        def handler(value):
+            threshold_edit.setText(str(value))
+            self.notification_handler.set_zone_threshold(index, value)
+            self.update_ranges()
+        return handler
+
+    def create_threshold_edit_handler(self, index, threshold_edit, range_label):
+        def handler():
+            value = int(threshold_edit.text())
+            self.sliders[index].setValue(value)
+            self.notification_handler.set_zone_threshold(index, value)
+            self.update_ranges()
+        return handler
+
+    def create_color_change_handler(self, index):
+        def handler():
+            color = QColorDialog.getColor()
+            if color.isValid():
+                rgb = (color.red(), color.green(), color.blue())
+                self.notification_handler.set_zone_color(index, rgb)
+                self.color_frames[index].setStyleSheet(f"background-color: rgb({rgb[0]}, {rgb[1]}, {rgb[2]});")
+        return handler
+
+    def start_thread(self):
+        global running
+        running = True
+        self.async_thread.start()
+        # Définir les LED à la couleur de la zone 1
+        zone_1_color = self.notification_handler.zone_colors[0]
+        threading.Thread(target=set_led_color_with_transition, args=zone_1_color).start()
+
+    def stop_thread(self):
+        global running
+        running = False
+        self.async_thread.quit()
+        # Éteindre les LED (définir à noir)
+        threading.Thread(target=set_led_color_with_transition, args=(0, 0, 0)).start()
+
+    def update_power(self, power):
+        self.power_label.setText(f'Puissance: {power} W')
+
+    def update_color(self, color_zone):
+        color, zone = color_zone
+        self.zone_label.setText(f'Zone de puissance: {zone}')
+        self.color_frame.setStyleSheet(f"background-color: rgb({color[0]}, {color[1]}, {color[2]});")
+
+    def update_ranges(self):
+        ranges = self.notification_handler.get_zone_ranges()
+        zone_names = [
+            "Récupération active", "Endurance", "Tempo", "Seuil", 
+            "VO2 max", "Anaérobique", "Neuromusculaire"
+        ]
+        for i, (low, high) in enumerate(ranges):
+            zone_name = zone_names[i]
+            if high == float('inf'):
+                range_text = f'Zone {i + 1} ({zone_name}): {low} W et plus'
+            else:
+                range_text = f'Zone {i + 1} ({zone_name}): {low} - {high} W'
+            self.range_labels[i].setText(range_text)
+
+    def save_defaults(self):
+        self.notification_handler.save_config()
+
+    def restore_defaults(self):
+        self.notification_handler.restore_default_config()
+        self.update_ranges()
+        for i in range(6):
+            self.sliders[i].setValue(self.notification_handler.zone_thresholds[i])
+            self.color_frames[i].setStyleSheet(f"background-color: rgb({self.notification_handler.zone_colors[i][0]}, {self.notification_handler.zone_colors[i][1]}, {self.notification_handler.zone_colors[i][2]});")
+        self.color_frames[6].setStyleSheet(f"background-color: rgb({self.notification_handler.zone_colors[6][0]}, {self.notification_handler.zone_colors[6][1]}, {self.notification_handler.zone_colors[6][2]});")
+
+if __name__ == '__main__':
+    app = QApplication(sys.argv)
+    window = MainWindow()
+    window.show()
+    sys.exit(app.exec_())
+
 ```
 
 ## 🚀 Utilisation
