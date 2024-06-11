@@ -458,19 +458,55 @@ if __name__ == '__main__':
 
 ```
 
-## 🚀 Utilisation
+## ⚙️Configuration
 
-### 1. Configurer le script :
+### Configurer le script :
 Pensez à éditer le script TrainerLED.py et remplacez les valeurs des variables HOME_TRAINER_MAC, SERVICE_UUID, et CHARACTERISTIC_UUID par celles de votre home trainer.
 
-### 2. Exécuter le script :
+## 🚴‍♂️ Utilisation
+
+### Exécuter le script :
 Ouvrez un terminal et exécutez le script :
 ```
 python TrainerLED.py
 ```
-## Observer les résultats :
 
-Les LED devraient maintenant changer de couleur en fonction de la puissance moyenne sur 1 seconde mesurée par le home trainer.
+### ⚡Réglages des Zones de Puissance
+
+L'application permet de définir sept zones de puissance, chacune associée à une couleur différente.
+
+Voici les étapes pour configurer ces zones :  
+
+- Démarrer l'application : Cliquez sur le bouton Démarrer.  
+- Arrêter l'application : Cliquez sur le bouton Arrêter.
+
+Vous pouvez ajuster les seuils de puissance pour chaque zone à l'aide des curseurs ou en entrant manuellement les valeurs :  
+
+- Zone 1 (Récupération active) : Réglage de 0 à zone 1.  
+- Zone 2 (Endurance) : Réglage zone 1 + à zone 2.  
+- Zone 3 (Tempo) : Réglage de zone 2 +  à zone 3.  
+- Zone 4 (Seuil) : Réglage de zone 3 + 1 à zone 4.  
+- Zone 5 (VO2 max) : Réglage de zone 4 + à zone 5.  
+- Zone 6 (Anaérobique) : Réglage de zone 5 + à zone 6.  
+- Zone 7 (Neuromusculaire) : Réglage de zone 6 + au-delà.  
+
+### 🎨 Couleurs des Zones
+
+Pour chaque zone, vous pouvez choisir une couleur en cliquant sur le bouton Sélectionner Couleur Zone X et en choisissant la couleur souhaitée à partir du sélecteur de couleur.    
+Sauvegarder et Restaurer les Paramètres
+
+Sauvegarder ce paramètre par défaut : Cliquez sur ce bouton pour sauvegarder les seuils et les couleurs actuels comme paramètres par défaut.  
+Restaurer les paramètres par défaut : Cliquez sur ce bouton pour restaurer les seuils et les couleurs par défaut.  
+
+### Exemple d'Utilisation
+
+Démarrez l'application en cliquant sur Démarrer.  
+Ajustez les seuils de puissance en utilisant les curseurs ou en entrant les valeurs manuellement.  
+Sélectionnez les couleurs pour chaque zone en cliquant sur les boutons de sélection de couleur.  
+Sauvegardez vos réglages en cliquant sur Sauvegarder ce paramètre par défaut.  
+Arrêtez l'application en cliquant sur Arrêter.  
+
+Les LED devraient maintenant changer de couleur en fonction de la puissance moyenne sur 1 seconde mesurée par le home trainer.  
 
 ## 📌 Contribution
 
