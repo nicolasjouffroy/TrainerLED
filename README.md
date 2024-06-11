@@ -80,8 +80,8 @@ import threading
 import time
 import json
 from collections import deque
-from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSlider, QFrame, QColorDialog, QGridLayout, QLineEdit
-from PyQt5.QtGui import QIntValidator
+from PyQt5.QtWidgets import QApplication, QWidget, QVBoxLayout, QHBoxLayout, QPushButton, QLabel, QSlider, QFrame, QColorDialog, QGridLayout, QLineEdit, QMessageBox, QDialog, QVBoxLayout
+from PyQt5.QtGui import QIntValidator, QFont
 from PyQt5.QtCore import QThread, pyqtSignal, QObject, Qt
 from bleak import BleakClient
 from openrgb import OpenRGBClient
@@ -102,7 +102,7 @@ color_lock = threading.Lock()
 # UUID et adresse MAC du home trainer
 SERVICE_UUID = '00001818-0000-1000-8000-00805f9b34fb'
 CHARACTERISTIC_UUID = '00002a63-0000-1000-8000-00805f9b34fb'
-HOME_TRAINER_MAC = 'A1:B2:C3:D4:E5:F6'
+HOME_TRAINER_MAC = 'XX:XX:XX:XX:XX:XX'
 
 # Classe pour gérer les notifications de puissance dans un thread séparé
 class PowerNotificationHandler(QObject):
@@ -279,6 +279,7 @@ class MainWindow(QWidget):
         self.stop_button = QPushButton('Arrêter')
         self.save_default_button = QPushButton('Sauvegarder ce paramètre par défaut')
         self.restore_default_button = QPushButton('Restaurer les paramètres par défaut')
+        self.about_button = QPushButton('À propos')
         self.power_label = QLabel('Puissance: N/A')
         self.zone_label = QLabel('Zone de puissance: N/A')
         self.color_frame = QFrame()
@@ -289,6 +290,7 @@ class MainWindow(QWidget):
         self.stop_button.clicked.connect(self.stop_thread)
         self.save_default_button.clicked.connect(self.save_defaults)
         self.restore_default_button.clicked.connect(self.restore_defaults)
+        self.about_button.clicked.connect(self.show_about_dialog)
 
         power_zone_layout = QHBoxLayout()
         power_zone_layout.addWidget(self.zone_label)
@@ -298,6 +300,7 @@ class MainWindow(QWidget):
         self.layout.addWidget(self.stop_button)
         self.layout.addWidget(self.save_default_button)
         self.layout.addWidget(self.restore_default_button)
+        self.layout.addWidget(self.about_button)
         self.layout.addWidget(self.power_label)
         self.layout.addLayout(power_zone_layout)
 
@@ -451,12 +454,28 @@ class MainWindow(QWidget):
             self.color_frames[i].setStyleSheet(f"background-color: rgb({self.notification_handler.zone_colors[i][0]}, {self.notification_handler.zone_colors[i][1]}, {self.notification_handler.zone_colors[i][2]});")
         self.color_frames[6].setStyleSheet(f"background-color: rgb({self.notification_handler.zone_colors[6][0]}, {self.notification_handler.zone_colors[6][1]}, {self.notification_handler.zone_colors[6][2]});")
 
+    def show_about_dialog(self):
+        dialog = QDialog(self)
+        dialog.setWindowTitle("À propos de TrainerLED")
+        layout = QVBoxLayout()
+        label = QLabel(
+            "<p>TrainerLED</p>"
+            "<p>Cette application permet de contrôler la puissance et les LED de votre home trainer via Bluetooth, "
+            "et d'afficher différentes zones de puissance avec des couleurs configurables.</p>"
+            "<p>Pour plus d'informations, visitez notre dépôt GitHub : "
+            "<a href='https://github.com/nicolasjouffroy/TrainerLED'>TrainerLED</a></p>"
+        )
+        label.setOpenExternalLinks(True)
+        label.setWordWrap(True)
+        layout.addWidget(label)
+        dialog.setLayout(layout)
+        dialog.exec_()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
     window = MainWindow()
     window.show()
     sys.exit(app.exec_())
-
 ```
 
 ## ⚙️Configuration
