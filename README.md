@@ -14,8 +14,11 @@ Ce projet permet de synchroniser la puissance de pédalage d'un home trainer ave
 L'idée est de visualiser les 7 zones de couleurs pour représenter les différentes plages de puissance.
 
 ![Description de l'image](TrainerLED.png)  
-Voici une démonstration :  
-https://www.youtube.com/watch?v=Lh4l7ruDxWw
+
+Voici une vidéo de démonstration  :
+
+[![Demo vidéo](https://img.youtube.com/vi/Lh4l7ruDxWw/0.jpg)](https://www.youtube.com/watch?v=Lh4l7ruDxWw)
+
 
 
 
