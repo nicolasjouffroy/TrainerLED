@@ -502,11 +502,11 @@ Sauvegarder et Restaurer les Paramètres :
 
 ### Exemple d'Utilisation
 
-Démarrez l'application en cliquant sur Démarrer.  
-Ajustez les seuils de puissance en utilisant les curseurs ou en entrant les valeurs manuellement.  
-Sélectionnez les couleurs pour chaque zone en cliquant sur les boutons de sélection de couleur.  
-Sauvegardez vos réglages en cliquant sur Sauvegarder ce paramètre par défaut.  
-Arrêtez l'application en cliquant sur Arrêter.  
+**1** - Démarrez l'application en cliquant sur Démarrer.  
+**2** - Ajustez les seuils de puissance en utilisant les curseurs ou en entrant les valeurs manuellement.  
+**3** - Sélectionnez les couleurs pour chaque zone en cliquant sur les boutons de sélection de couleur.  
+**4** - Sauvegardez vos réglages en cliquant sur Sauvegarder ce paramètre par défaut.  
+**5** - Arrêtez l'application en cliquant sur Arrêter.  
 
 Les LED devraient maintenant changer de couleur en fonction de la puissance moyenne sur 1 seconde mesurée par le home trainer.  
 
