@@ -477,26 +477,27 @@ L'application permet de définir sept zones de puissance, chacune associée à u
 
 Voici les étapes pour configurer ces zones :  
 
-- Démarrer l'application : Cliquez sur le bouton Démarrer.  
-- Arrêter l'application : Cliquez sur le bouton Arrêter.
+- **Démarrer l'application** : Cliquez sur le bouton Démarrer.  
+- **Arrêter l'application** : Cliquez sur le bouton Arrêter.
 
 Vous pouvez ajuster les seuils de puissance pour chaque zone à l'aide des curseurs ou en entrant manuellement les valeurs :  
 
-- Zone 1 (Récupération active) : Réglage de 0 à zone 1.  
-- Zone 2 (Endurance) : Réglage zone 1 + à zone 2.  
-- Zone 3 (Tempo) : Réglage de zone 2 +  à zone 3.  
-- Zone 4 (Seuil) : Réglage de zone 3 + 1 à zone 4.  
-- Zone 5 (VO2 max) : Réglage de zone 4 + à zone 5.  
-- Zone 6 (Anaérobique) : Réglage de zone 5 + à zone 6.  
-- Zone 7 (Neuromusculaire) : Réglage de zone 6 + au-delà.  
+- **Zone 1** (Récupération active) : Réglage de 0 à zone 1.  
+- **Zone 2** (Endurance) : Réglage zone 1 + à zone 2.  
+- **Zone 3** (Tempo) : Réglage de zone 2 +  à zone 3.  
+- **Zone 4** (Seuil) : Réglage de zone 3 + 1 à zone 4.  
+- **Zone 5** (VO2 max) : Réglage de zone 4 + à zone 5.  
+- **Zone 6** (Anaérobique) : Réglage de zone 5 + à zone 6.  
+- **Zone 7** (Neuromusculaire) : Réglage de zone 6 + au-delà.  
 
 ### 🎨 Couleurs des Zones
 
-Pour chaque zone, vous pouvez choisir une couleur en cliquant sur le bouton Sélectionner Couleur Zone X et en choisissant la couleur souhaitée à partir du sélecteur de couleur.    
-Sauvegarder et Restaurer les Paramètres
+Pour chaque zone, vous pouvez choisir une couleur en cliquant sur le bouton Sélectionner Couleur Zone X et en choisissant la couleur souhaitée à partir du sélecteur de couleur.   
 
-Sauvegarder ce paramètre par défaut : Cliquez sur ce bouton pour sauvegarder les seuils et les couleurs actuels comme paramètres par défaut.  
-Restaurer les paramètres par défaut : Cliquez sur ce bouton pour restaurer les seuils et les couleurs par défaut.  
+Sauvegarder et Restaurer les Paramètres :  
+
+- Sauvegarder ce paramètre par défaut : Cliquez sur ce bouton pour sauvegarder les seuils et les couleurs actuels comme paramètres par défaut.  
+- Restaurer les paramètres par défaut : Cliquez sur ce bouton pour restaurer les seuils et les couleurs par défaut.  
 
 ### Exemple d'Utilisation
 
