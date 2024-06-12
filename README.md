@@ -14,6 +14,7 @@ Ce projet permet de synchroniser la puissance de pédalage d'un home trainer ave
 L'idée est de visualiser les 7 zones de couleurs pour représenter les différentes plages de puissance.  
 
 #### Le programme est testé sur un Home trainer Tacx NEO 2T et des pédales Favero Assioma DUO.
+#### Pour assurer une compatibilité optimale, il est recommandé d'utiliser la connexion ANT+ pour votre logiciel virtuel (tel qu'IndieVelo, Zwift, Rouvy, etc.) et TrainerLED en Bluetooth.
 
 ![Description de l'image](TrainerLED.png)  
 
