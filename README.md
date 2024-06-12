@@ -13,8 +13,9 @@ En cours de développement. Les contributions et suggestions sont les bienvenues
 Ce projet permet de synchroniser la puissance de pédalage d'un home trainer avec des LED RGB en utilisant `OpenRGB` pour le contrôle des LED et `Bleak` pour la communication Bluetooth avec le home trainer.
 L'idée est de visualiser les 7 zones de couleurs pour représenter les différentes plages de puissance.  
 
-#### Le programme est testé sur un Home trainer Tacx NEO 2T et des pédales Favero Assioma DUO.
-#### Pour assurer une compatibilité optimale, il est recommandé d'utiliser la connexion ANT+ pour votre logiciel virtuel (tel qu'IndieVelo, Zwift, Rouvy, etc.) et TrainerLED en Bluetooth.
+#### Le programme a été testé sur un home trainer Tacx NEO 2T et des pédales Favero Assioma DUO.
+#### Pour assurer une compatibilité optimale, il est recommandé d'utiliser la connexion ANT+ pour votre logiciel virtuel (tel qu'IndieVelo, Zwift, Rouvy, etc.) et TrainerLED en Bluetooth.  
+#### Laissez TrainerLED tourner en arrière-plan, puis lancez votre logiciel virtuel en utilisant la connexion ANT+
 
 ![Description de l'image](TrainerLED.png)  
 
@@ -531,11 +532,12 @@ Sauvegarder et Restaurer les Paramètres :
 
 ### Exemple d'Utilisation
 
-**1** - Démarrez l'application en cliquant sur Démarrer.  
-**2** - Ajustez les seuils de puissance en utilisant les curseurs ou en entrant les valeurs manuellement.  
-**3** - Sélectionnez les couleurs pour chaque zone en cliquant sur les boutons de sélection de couleur.  
-**4** - Sauvegardez vos réglages en cliquant sur Sauvegarder ce paramètre par défaut.  
-**5** - Arrêtez l'application en cliquant sur Arrêter.  
+**1** - Cliquez sur **Rechercher Home Trainer** et selectionnez votre appareil.  
+**2** - Démarrez l'application en cliquant sur **Démarrer**.  
+**3** - Ajustez vos seuils de puissance en utilisant les curseurs ou en entrant les valeurs manuellement.  
+**4** - Sélectionnez les couleurs pour chaque zone en cliquant sur les boutons de sélection de couleur.  
+**5** - Sauvegardez vos réglages en cliquant sur Sauvegarder ce paramètre par défaut.  
+**6** - Arrêtez l'application en cliquant sur **Arrêter**.
 
 Les LED devraient maintenant changer de couleur en fonction de la puissance moyenne sur 1 seconde mesurée par le home trainer.  
 
