@@ -53,22 +53,29 @@ pip install bleak openrgb-python PyQt5
 Téléchargez et installez [OpenRGB](https://openrgb.org/). Assurez-vous que OpenRGB fonctionne dans un premier temps.
 Ensuite il faut que le serveur OpenRGB soit activé. Pour l'activer il faut aller dans les paramètres de OpenRGB et activer l'option "Enable SDK Server".
 
-## 🔍 Trouver l'UUID et l'adresse MAC du Home Trainer
+## 🔍 Facultatif - Trouver l'UUID et l'adresse MAC du Home Trainer.
 
-C'est la partie la plus difficile. Pour que le script fonctionne, vous devez connaître l'UUID du service et de la caractéristique de puissance, ainsi que l'adresse MAC de votre home trainer. 
+Pour que le script fonctionne, vous devez connaître l'UUID du service et de la caractéristique de puissance, ainsi que l'adresse MAC de votre home trainer.  
+Par défaut, **les UUIDs standard déjà intégrés fonctionnent sans modification** avec un Tacx NEO 2T et des pédales Favero Assioma DUO.
 
-Voici comment les trouver :
+Sinon voici comment les trouver :
 
-### Trouver l'adresse MAC
+**1** - Ouvrez TrainerLED.  
+**2** - Cliquez sur **Rechercher Home Trainer** et selectionnez le bon appareil.  
+**3** - Cliquez sur **À propos" puis** puis **Info**  
+
+Cela vous fournira les informations nécessaires pour configurer le script correctement.
+
+#### Autre méthode
 
 Scanner avec un outil Bluetooth :
-Utilisez un outil comme Bluetooth LE Scanner sur Android ou LightBlue sur iOS.
+Utilisez un outil comme **Bluetooth LE Scanner** sur Android ou **LightBlue** sur iOS.
 Recherchez votre home trainer dans la liste des appareils disponibles.
 Notez l'adresse MAC qui sera dans un format comme XX:XX:XX:XX:XX:XX.
 
-### Trouver l'UUID
+#### Trouver l'UUID
 
-Utiliser un scanner Bluetooth (l'application par exemple):
+Utiliser un scanner Bluetooth (l'application Android par exemple):
 Une fois votre appareil trouvé dans l'application scanner, vous pouvez afficher les services et caractéristiques disponibles.
 Recherchez les services qui se rapportent à la puissance de cyclisme. 
 
