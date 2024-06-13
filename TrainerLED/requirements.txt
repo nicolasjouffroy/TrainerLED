@@ -1,0 +1,8 @@
+asyncio
+bleak
+gettext
+json
+logging
+matplotlib
+openrgb-python
+PyQt5
