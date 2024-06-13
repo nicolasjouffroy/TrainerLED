@@ -65,11 +65,11 @@ pip install -r requirements.txt
 Téléchargez et installez [OpenRGB](https://openrgb.org/). Assurez-vous que OpenRGB fonctionne dans un premier temps.
 Ensuite il faut que le serveur OpenRGB soit activé. Pour l'activer il faut aller dans les paramètres de OpenRGB et activer l'option "Enable SDK Server".  
 
-### 🔍 *Facultatif*
+### 🔍 *Facultatif : Utilisation d'un UUID différent*
 
 *Trouver l'UUID et l'adresse MAC du Home Trainer.*
 
-*Pour que le script fonctionne, vous devez connaître l'UUID du service et de la caractéristique de puissance, ainsi que l'adresse MAC de votre home trainer.* 
+*Pour que le script fonctionne, vous devez connaître l'UUID du service et de la caractéristique de puissance, ainsi que l'adresse MAC de votre home trainer.*  
 *Par défaut, **les UUIDs standard déjà intégrés fonctionnent sans modification** avec un Tacx NEO 2T et des pédales Favero Assioma DUO.*
 
 *Sinon voici comment les trouver :*
@@ -102,6 +102,11 @@ Ensuite il faut que le serveur OpenRGB soit activé. Pour l'activer il faut alle
 *## Configuration du Script **si nécessaire***
 
 *Editez le script TrainerLED.py et remplacez les valeurs des variables SERVICE_UUID, et CHARACTERISTIC_UUID par celles de votre home trainer.*
+
+```
+SERVICE_UUID = 'votre-nouveau-service-uuid'
+CHARACTERISTIC_UUID = 'votre-nouvelle-characteristic-uuid'
+```
 
 ## 🚴‍♂️ Utilisation
 
