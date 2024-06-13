@@ -46,7 +46,7 @@ Assurez-vous d'avoir Python 3.8 ou une version ultérieure installée sur votre 
 Utilisez `pip` pour installer les bibliothèques requises :
 
 ```sh
-pip install bleak openrgb-python PyQt5
+pip install -r requirements.txt
 ```
 ### 3. Configuration de OpenRGB
 
