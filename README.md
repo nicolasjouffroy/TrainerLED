@@ -74,9 +74,9 @@ Ensuite il faut que le serveur OpenRGB soit activé. Pour l'activer il faut alle
 
 *Sinon voici comment les trouver :*
 
-***1** - Ouvrez TrainerLED.* 
-***2** - Cliquez sur **Rechercher Home Trainer** et selectionnez le bon appareil.*   
-***3** - Cliquez sur **À propos" puis** puis **Info***    
+***1** - Ouvrez TrainerLED.*  
+***2** - Cliquez sur **Rechercher Home Trainer** et selectionnez le bon appareil.*  
+***3** - Cliquez sur **À propos" puis** puis **Info***  
 
 *Cela vous fournira les informations nécessaires pour configurer le script correctement.*
 
